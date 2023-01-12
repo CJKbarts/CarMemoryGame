@@ -707,14 +707,20 @@ def mousePressed():
 
 
 def spriteClicked(sprite):
-    mouseState = pygame.mouse.get_pressed()
-    if not mouseState[0]:
-        return False  # not pressed
+    action = False
+    clicked = False
     pos = pygame.mouse.get_pos()
+
     if sprite.rect.collidepoint(pos):
-        return True
-    else:
-        return False
+        if pygame.mouse.get_pressed()[0] == 1 and clicked == False:
+            clicked = True
+            action = True
+
+    if pygame.mouse.get_pressed()[0] == 0:
+        clicked = False
+        action = False
+
+    return action
 
 
 def parseColour(colour):
