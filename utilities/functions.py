@@ -1,6 +1,4 @@
-import pygame
-import pygame_functions as pyf
-import random
+import pygame_functions as pyf, random, pygame
 from utilities import classes
 
 
@@ -91,18 +89,20 @@ def get_directions(system_directions, y=y, x=x):
     turn_countdown = pyf.makeLabel(f'{turns_left}', 30, 50, 100, 'white')
 
     while not start:
+        pyf.updateDisplay()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
-            if pyf.keyPressed("return"):
-                pyf.changeLabel(instructional_label, 'Number of turns left:')
-                for i in range(-505, -350):
-                    pyf.pause(10)
-                    y -= 1
-                    pyf.moveSprite(car, x, y, True)
-                    start = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    pyf.changeLabel(instructional_label, 'Number of turns left:')
+                    for i in range(-505, -350):
+                        pyf.pause(10)
+                        y -= 1
+                        pyf.moveSprite(car, x, y, True)
+                        start = True
 
     while turns_left != 0:
         pyf.showLabel(turn_countdown)
@@ -111,46 +111,47 @@ def get_directions(system_directions, y=y, x=x):
                 pygame.quit()
                 quit()
 
-            if pyf.keyPressed("up"):
-                if current_direction == 'right':
-                    turn_car('left', 90)
-                elif current_direction == 'left':
-                    turn_car('right', -90)
-                current_direction = 'up'
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    if current_direction == 'right':
+                        turn_car('left', 90)
+                    elif current_direction == 'left':
+                        turn_car('right', -90)
+                    current_direction = 'up'
 
-                for i in range(285):
-                    pyf.pause(2)
-                    pyf.scrollBackground(0, 5)
-                user_directions.append('up')
-                turns_left -= 1
+                    for i in range(285):
+                        pyf.pause(2)
+                        pyf.scrollBackground(0, 5)
+                    user_directions.append('up')
+                    turns_left -= 1
 
-            elif pyf.keyPressed("right"):
-                if current_direction == 'up':
-                    turn_car('right', 0)
-                elif current_direction == 'left':
-                    turn_car('right', -90)
-                    turn_car('right', 0)
-                current_direction = 'right'
+                if event.key == pygame.K_RIGHT:
+                    if current_direction == 'up':
+                        turn_car('right', 0)
+                    elif current_direction == 'left':
+                        turn_car('right', -90)
+                        turn_car('right', 0)
+                    current_direction = 'right'
 
-                for i in range(513):
-                    pyf.pause(2)
-                    pyf.scrollBackground(-5, 0)
-                user_directions.append('right')
-                turns_left -= 1
+                    for i in range(513):
+                        pyf.pause(2)
+                        pyf.scrollBackground(-5, 0)
+                    user_directions.append('right')
+                    turns_left -= 1
 
-            elif pyf.keyPressed("left"):
-                if current_direction == 'up':
-                    turn_car('left', 0)
-                elif current_direction == 'right':
-                    turn_car('left', 90)
-                    turn_car('left', 0)
-                current_direction = 'left'
+                if event.key == pygame.K_LEFT:
+                    if current_direction == 'up':
+                        turn_car('left', 0)
+                    elif current_direction == 'right':
+                        turn_car('left', 90)
+                        turn_car('left', 0)
+                    current_direction = 'left'
 
-                for i in range(513):
-                    pyf.pause(2)
-                    pyf.scrollBackground(5, 0)
-                user_directions.append('left')
-                turns_left -= 1
+                    for i in range(513):
+                        pyf.pause(2)
+                        pyf.scrollBackground(5, 0)
+                    user_directions.append('left')
+                    turns_left -= 1
 
             pyf.changeLabel(turn_countdown, f'{turns_left}')
             pyf.showLabel(turn_countdown)
@@ -167,7 +168,8 @@ def get_directions(system_directions, y=y, x=x):
 
     if user_directions == system_directions:
         pyf.setBackgroundImage('Pictures/win_pic.jpg')
-        difficulty.unlock_level()
+        if difficulty.difficulty_level == difficulty.unlocked_level:
+            difficulty.unlock_level()
     else:
         pyf.setBackgroundImage('Pictures/lose_pic.jpg')
 
@@ -176,16 +178,15 @@ def get_directions(system_directions, y=y, x=x):
 
 def main_game():
     quit_game = False
-    current_difficulty = 1
     start = False
     pyf.setBackgroundColour(pastel_blue)
-    level_button_label = pyf.makeLabel(str(current_difficulty), 80, 630, 337, 'black', 'aberus')
+    level_button_label = pyf.makeLabel(str(difficulty.difficulty_level), 80, 630, 337, 'black', 'aberus')
     difficulty_instructions = pyf.makeLabel('Choose your difficulty', 100, 0, 0, 'black', 'aberus')
     pyf.showLabel(level_button_label)
     pyf.showLabel(difficulty_instructions)
-    level_button = make_button("Pictures/button.png", 3.5, 640, 360)
-    left_button = make_button('Pictures/l-arrow.png', .5, 433, 360)
-    right_button = make_button('Pictures/r-arrow.png', .5, 847, 360)
+    level_button = make_button("Pictures/button.png", 1, 640, 360)
+    left_button = make_button('Pictures/l-arrow.png', 1, 433, 360)
+    right_button = make_button('Pictures/r-arrow.png', 1, 847, 360)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -207,14 +208,15 @@ def main_game():
 
     while not quit_game:
         for event in pygame.event.get():
+            pyf.updateDisplay()
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
             if pyf.spriteClicked(left_button):
-                if current_difficulty > 1:
-                    current_difficulty -= 1
-                    pyf.changeLabel(level_button_label, str(current_difficulty))
+                if difficulty.difficulty_level > 1:
+                    difficulty.difficulty_level -= 1
+                    pyf.changeLabel(level_button_label, str(difficulty.difficulty_level))
                     pyf.showLabel(level_button_label)
                 else:
                     hide_buttons_and_text()
@@ -225,9 +227,9 @@ def main_game():
                     show_buttons_and_text()
 
             if pyf.spriteClicked(right_button):
-                if current_difficulty < difficulty.unlocked_level:
-                    current_difficulty += 1
-                    pyf.changeLabel(level_button_label, str(current_difficulty))
+                if difficulty.difficulty_level < difficulty.unlocked_level:
+                    difficulty.difficulty_level += 1
+                    pyf.changeLabel(level_button_label, str(difficulty.difficulty_level))
                     pyf.showLabel(level_button_label)
                 else:
                     hide_buttons_and_text()
@@ -239,6 +241,6 @@ def main_game():
 
             if pyf.spriteClicked(level_button):
                 hide_buttons_and_text()
-                difficulty.choose_difficulty(current_difficulty)
+                difficulty.choose_difficulty(difficulty.difficulty_level)
                 get_directions(generate_route())
                 quit_game = True

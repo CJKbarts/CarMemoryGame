@@ -25,7 +25,7 @@ while run:
             pyf.setBackgroundColour(pastel_blue)
             pyf.showSprite(start_button)
             pyf.showSprite(quit_button)
-
+            pyf.updateDisplay()
 
         elif pyf.spriteClicked(quit_button):
             run = False
