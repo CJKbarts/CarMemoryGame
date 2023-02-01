@@ -1,3 +1,5 @@
+import sys
+
 import pygame_functions as pyf, random, pygame
 from utilities import classes
 
@@ -35,7 +37,7 @@ def generate_route():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    quit()
+                    sys.exit()
 
             addition = random.choice(direction_syntax)
             system_directions.append(addition)
@@ -57,7 +59,7 @@ def generate_route():
         pyf.pause(1500)
     except Exception:
         pygame.quit()
-        quit()
+        sys.exit()
     return system_directions
 
 
@@ -93,7 +95,7 @@ def get_directions(system_directions, y=y, x=x):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                sys.exit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
@@ -109,7 +111,7 @@ def get_directions(system_directions, y=y, x=x):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                sys.exit()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
@@ -191,7 +193,7 @@ def main_game():
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            quit()
+            sys.exit()
     def hide_buttons_and_text():
         pyf.hideSprite(level_button)
         pyf.hideSprite(left_button)
@@ -211,7 +213,7 @@ def main_game():
             pyf.updateDisplay()
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                sys.exit()
 
             if pyf.spriteClicked(left_button):
                 if difficulty.difficulty_level > 1:

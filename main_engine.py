@@ -1,3 +1,5 @@
+import sys
+
 import pygame_functions as pyf
 import pygame
 from utilities import functions
@@ -7,6 +9,8 @@ pyf.screenSize(1280, 720)
 pastel_blue = (57, 157, 207)
 pyf.setBackgroundColour(pastel_blue)
 pyf.setWindowTitle('Car Memory Game')
+icon_img = pygame.image.load('Pictures/car.png').convert_alpha()
+pygame.display.set_icon(icon_img)
 
 
 start_button = functions.make_button('Pictures/start_button.png', 1, 640, 300)
@@ -31,3 +35,4 @@ while run:
             run = False
 
 pygame.quit()
+sys.exit()
